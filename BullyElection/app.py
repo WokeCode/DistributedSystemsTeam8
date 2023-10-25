@@ -1,10 +1,9 @@
 import asyncio
+import aiohttp
 from aiohttp import web
 import os
 import socket
 import random
-import aiohttp
-import requests
 
 POD_IP = str(os.environ['POD_IP'])
 WEB_PORT = int(os.environ['WEB_PORT'])
@@ -12,45 +11,52 @@ POD_ID = random.randint(0, 100)
 
 async def setup_k8s():
     # If you need to do setup of Kubernetes, i.e. if using Kubernetes Python client
-	print("K8S setup completed")
- 
+    print("K8S setup completed")
+
 async def run_bully():
     while True:
         print("Running bully")
-        await asyncio.sleep(5) # wait for everything to be up
-        
+        await asyncio.sleep(10)  # Wait for everything to be up
+
         # Get all pods doing bully
         ip_list = []
         print("Making a DNS lookup to service")
-        response = socket.getaddrinfo("bully-service",0,0,0,0)
+        response = socket.getaddrinfo("bully-service", 0, 0, 0, 0)
         print("Get response from DNS")
         for result in response:
             ip_list.append(result[-1][0])
         ip_list = list(set(ip_list))
-        
-        # Remove own POD ip from the list of pods
+
+        # Remove own POD IP from the list of pods
         ip_list.remove(POD_IP)
-        print("Got %d other pod ip's" % (len(ip_list)))
-        
-        # Get ID's of other pods by sending a GET request to them
-        await asyncio.sleep(2)
+        print("Got %d other pod IPs" % (len(ip_list)))
+
+        # Get IDs of other pods by sending a GET request to them
+        await asyncio.sleep(random.randint(2, 10))
         other_pods = dict()
         for pod_ip in ip_list:
             endpoint = '/pod_id'
-            url = 'http://' + str(pod_ip) + ':' + str(WEB_PORT) + endpoint
-            response = requests.get(url)
-            other_pods[str(pod_ip)] = response.json()
-            
-        # Other pods in network
+            url = f'http://{pod_ip}:{WEB_PORT}{endpoint}'
+            async with aiohttp.ClientSession() as session:
+                async with session.get(url, timeout=5) as response:
+                    other_pods[str(pod_ip)] = await response.json()
+
+        # Other pods in the network
         print(other_pods)
-        
+
         # Sleep a bit, then repeat
-        await asyncio.sleep(2)
-    
-#GET /pod_id
+        await asyncio.sleep(5)
+
+# GET /pod_id
 async def pod_id(request):
     return web.json_response(POD_ID)
-    
+
+async def background_tasks(app):
+    task = asyncio.create_task(run_bully())
+    yield
+    task.cancel()
+    await task
+
 #POST /receive_answer
 async def receive_answer(request):
     pass
@@ -63,11 +69,6 @@ async def receive_election(request):
 async def receive_coordinator(request):
     pass
 
-async def background_tasks(app):
-    task = asyncio.create_task(run_bully())
-    yield
-    task.cancel()
-    await task
 
 if __name__ == "__main__":
     app = web.Application()
