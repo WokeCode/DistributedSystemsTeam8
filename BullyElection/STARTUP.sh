@@ -1,23 +1,51 @@
 minikube start
 
+clear
+echo "Configuring docker enviornment"
+sleep 5
 
 eval $(minikube docker-env)
+
+clear
+echo "Building Docker"
+sleep 5
 
 
 docker build -t bully-app:0.0.1 .
 
 
+
+clear
+echo "Building image"
+sleep 5
+
 kubectl run bully-app --image=bully-app:0.0.1 --image-pull-policy=Never
 
+
+clear
+echo "Ensuring image creation"
+sleep 5
 
 kubectl get pods
 
 
+clear
+echo "Building deployment"
+sleep 5
+
 docker build -t bully-app .
 
 
+clear
+echo "Setting up headless servise"
+sleep 5
+
 kubectl apply -f k8s/headless-service.yaml
 
+
+clear
+echo "Applying up deployment"
+sleep 5
 
 kubectl apply -f k8s/deployment.yaml
 
@@ -41,6 +69,7 @@ loading_bar() {
     echo "] Done"
 }
 
+clear
 loading_bar 5
 
 

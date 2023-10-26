@@ -10,11 +10,14 @@ POD_IP = str(os.environ['POD_IP'])
 WEB_PORT = int(os.environ['WEB_PORT'])
 POD_ID = random.randint(0, 100)
 
+
+
 async def setup_k8s():
     # If you need to do setup of Kubernetes, i.e. if using Kubernetes Python client
 	print("K8S setup completed")
  
 async def run_bully():
+    bully_count = 0
     while True:
         print("Running bully")
         await asyncio.sleep(5) # wait for everything to be up
@@ -43,6 +46,11 @@ async def run_bully():
             
         # Other pods in network
         print(other_pods)
+
+        # Print amounts of times bully has been run
+        bully_count += 1
+        print(bully_count)
+        
         
         # Sleep a bit, then repeat
         await asyncio.sleep(2)
