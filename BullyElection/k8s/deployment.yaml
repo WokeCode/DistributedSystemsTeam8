@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: bully-container
-          image: bully-app
+          image: bully-app:latest
           imagePullPolicy: Never
           env:
             - name: WEB_PORT

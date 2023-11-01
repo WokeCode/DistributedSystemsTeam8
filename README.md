@@ -35,16 +35,10 @@ minikube start
 minikube docker-env | Invoke-Expression
 
 
-docker build -t foo:0.0.1 .
-
-
-kubectl run hello-foo --image=foo:0.0.1 --image-pull-policy=Never
+docker build -t bully-app .
 
 
 kubectl get pods
-
-
-docker build -t bully-app .
 
 
 kubectl apply -f k8s/headless-service.yaml
@@ -52,3 +46,6 @@ kubectl apply -f k8s/headless-service.yaml
 
 kubectl apply -f k8s/deployment.yaml
 
+
+## update image
+kubectl set image deployment/bully-app bully-container=bully-app:latest
