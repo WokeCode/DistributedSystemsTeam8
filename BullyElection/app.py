@@ -10,7 +10,10 @@ POD_IP = str(os.environ['POD_IP'])
 WEB_PORT = int(os.environ['WEB_PORT'])
 POD_ID = random.randint(0, 100)
 
-
+async def fetch_url(url):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            return await response.text()
 
 async def setup_k8s():
     # If you need to do setup of Kubernetes, i.e. if using Kubernetes Python client
@@ -41,15 +44,16 @@ async def run_bully():
         for pod_ip in ip_list:
             endpoint = '/pod_id'
             url = 'http://' + str(pod_ip) + ':' + str(WEB_PORT) + endpoint
-            response = requests.get(url)
+            print("Got to here")
+            response = fetch_url(url)
             other_pods[str(pod_ip)] = response.json()
             
         # Other pods in network
         print(other_pods)
-
+        """
         # Print amounts of times bully has been run
         bully_count += 1
-        print(bully_count)
+        print(bully_count)"""
         
         
         # Sleep a bit, then repeat

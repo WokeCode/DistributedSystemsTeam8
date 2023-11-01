@@ -1,6 +1,6 @@
 # DistributedSystemsTeam8
 Repository for group projects, for Distributed Systems 2023, to setup reboot and startup commands enter 
-'chmod +x REBOOT.sh' and 'chmod +x STARTUP.sh' in terminal at repo directory. On startup enter './STARTUP.sh' in terminal window, and on reboot './REBOOT.sh'
+'chmod +x SHUTDOWN.sh', 'chmod +x REBOOT.sh' and 'chmod +x STARTUP.sh' in terminal at repo directory. On startup enter './STARTUP.sh' in terminal window, and on reboot './REBOOT.sh'
 
 ## SETUP (linux)
 

@@ -6,6 +6,7 @@ sleep 5
 
 eval $(minikube docker-env)
 
+sleep 5
 clear
 echo "Building Docker"
 sleep 5
@@ -13,36 +14,35 @@ sleep 5
 
 docker build -t bully-app:0.0.1 .
 
-
-
+sleep 5
 clear
 echo "Building image"
 sleep 5
 
 kubectl run bully-app --image=bully-app:0.0.1 --image-pull-policy=Never
 
-
+sleep 5
 clear
 echo "Ensuring image creation"
 sleep 5
 
 kubectl get pods
 
-
+sleep 5
 clear
 echo "Building deployment"
 sleep 5
 
 docker build -t bully-app .
 
-
+sleep 5
 clear
 echo "Setting up headless servise"
 sleep 5
 
 kubectl apply -f k8s/headless-service.yaml
 
-
+sleep 5
 clear
 echo "Applying up deployment"
 sleep 5

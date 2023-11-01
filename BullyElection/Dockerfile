@@ -8,9 +8,10 @@ WORKDIR /app
 RUN pip install --upgrade pip
 
 # Copy requirements to container and install
-COPY requirements.txt requirements.txt
-RUN pip install -r requirements.txt
- 
+#COPY requirements.txt requirements.txt
+#RUN pip install -r requirements.txt
+ RUN pip3 install aiohttp==3.6.2 &&\
+    pip3 install requests==2.31.0
 # Upgrade pip
 RUN pip install --upgrade pip
 
