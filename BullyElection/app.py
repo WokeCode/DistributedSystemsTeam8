@@ -10,59 +10,64 @@ POD_IP = str(os.environ['POD_IP'])
 WEB_PORT = int(os.environ['WEB_PORT'])
 POD_ID = random.randint(0, 100)
 
-async def fetch_url(url):
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as response:
-            return await response.text()
-
 async def setup_k8s():
     # If you need to do setup of Kubernetes, i.e. if using Kubernetes Python client
 	print("K8S setup completed")
+
+async def get_pod_id(session, pod_ip):
+    endpoint = '/pod_id'
+    url = f'http://{pod_ip}:{WEB_PORT}{endpoint}'
+    async with session.get(url, timeout=5) as response:
+        return pod_ip, await response.json()
  
 async def run_bully():
-    bully_count = 0
+    num_request = 0
     while True:
-        print("Running bully")
-        await asyncio.sleep(5) # wait for everything to be up
-        
-        # Get all pods doing bully
-        ip_list = []
-        print("Making a DNS lookup to service")
-        response = socket.getaddrinfo("bully-service",0,0,0,0)
-        print("Get response from DNS")
-        for result in response:
-            ip_list.append(result[-1][0])
-        ip_list = list(set(ip_list))
-        
-        # Remove own POD ip from the list of pods
-        ip_list.remove(POD_IP)
-        print("Got %d other pod ip's" % (len(ip_list)))
-        
-        # Get ID's of other pods by sending a GET request to them
-        await asyncio.sleep(random.randint(1, 5))
-        other_pods = dict()
-        for pod_ip in ip_list:
-            endpoint = '/pod_id'
-            url = 'http://' + str(pod_ip) + ':' + str(WEB_PORT) + endpoint
-            print("Got to here")
-            response = fetch_url(url)
-            other_pods[str(pod_ip)] = response.json()
+        try:
+            print("Running bully")
+            await asyncio.sleep(5) # wait for everything to be up
             
-        # Other pods in network
-        print(other_pods)
-        """
-        # Print amounts of times bully has been run
-        bully_count += 1
-        print(bully_count)"""
-        
-        
-        # Sleep a bit, then repeat
-        await asyncio.sleep(2)
+            # Get all pods doing bully
+            ip_list = []
+            print("Making a DNS lookup to service")
+            response = socket.getaddrinfo("bully-service",0,0,0,0)
+            print("Get response from DNS")
+            for result in response:
+                ip_list.append(result[-1][0])
+            ip_list = list(set(ip_list))
+            print(f"Got {len(ip_list)} pod ip's + my own")
+            # Remove own POD ip from the list of pods
+            ip_list.remove(POD_IP)
+            print("Got %d other pod ip's" % (len(ip_list)))
+            
+            # Get ID's of other pods by sending a GET request to them
+            await asyncio.sleep(random.randint(1, 5))
+            other_pods = dict()
+            print("Getting ID's of other pods")
+            async with aiohttp.ClientSession() as session:
+                print("Getting pod id")
+                tasks = [get_pod_id(session, pod_ip) for pod_ip in ip_list]
+                results = await asyncio.gather(*tasks)
+                for pod_ip, pod_id in results:
+                    other_pods[pod_ip] = pod_id
+
+            # Other pods in network
+            print(other_pods)
+            print(f"number of requests: {num_request}")
+            num_request += 1
+            
+            # Sleep a bit, then repeat
+            await asyncio.sleep(2)
+        except Exception as e:
+            print("Exception in run_bully")
+            print(e)
+            await asyncio.sleep(2)
     
 #GET /pod_id
 async def pod_id(request):
+    print("returning pod id")
     return web.json_response(POD_ID)
-    
+
 #POST /receive_answer
 async def receive_answer(request):
     pass
@@ -82,6 +87,7 @@ async def background_tasks(app):
     await task
 
 if __name__ == "__main__":
+    print("version 3")
     app = web.Application()
     app.router.add_get('/pod_id', pod_id)
     app.router.add_post('/receive_answer', receive_answer)

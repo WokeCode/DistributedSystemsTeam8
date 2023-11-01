@@ -1,5 +1,6 @@
 minikube start
 
+
 clear
 echo "Configuring docker enviornment"
 sleep 5
@@ -74,3 +75,6 @@ loading_bar 5
 
 
 kubectl get pods
+
+
+minikube dashboard
