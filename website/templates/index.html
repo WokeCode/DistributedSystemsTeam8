@@ -3,11 +3,20 @@
 <head>
     <title>Fortune Cookie</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+        }
+    </style>
 </head>
 <body>
     <h1>Fortune Cookie</h1>
-    <button id="get-fortune-button">Get Fortune Cookie</button>
-    <div id="fortune-result"></div>
+    <p>Click the button to get your fortune cookie.</p>
+    <button id="get-fortune-button">Get Fortune Cookie</button> 
+    <div id="fortune-result"></div> <br>
 
     <script>
         $(document).ready(function () {
