@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fortune Cookie</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Fortune Cookie</h1>
+    <button id="get-fortune-button">Get Fortune Cookie</button>
+    <div id="fortune-result"></div>
+
+    <script>
+        $(document).ready(function () {
+            $('#get-fortune-button').click(function () {
+                $.ajax({
+                    url: '/get_fortune',
+                    type: 'POST',
+                    success: function (response) {
+                        $('#fortune-result').text(response.fortune);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
