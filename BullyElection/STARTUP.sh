@@ -77,4 +77,7 @@ loading_bar 5
 kubectl get pods
 
 
+minikube addons enable metrics-server
+
+
 minikube dashboard
