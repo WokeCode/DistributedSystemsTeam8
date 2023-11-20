@@ -1,0 +1,40 @@
+Started Logging to 3
+3: 3 connected to 4 
+3: Running, Leader <Pod(Thread-1, initial)> 
+3: Running, Leader <Pod(Thread-1, initial)> 
+3: Running, Leader <Pod(Thread-1, initial)> 
+3: Ok from 1 
+3: will try to remove 1 from dict_keys([]) 
+3: Exception: <class 'Exception'> 
+3: Exception: <class 'Exception'> 
+3: Exception: <class 'Exception'> 
+3: Removed 1 
+3: recieved election from 2 
+3: Election 
+3: Min pod is 2 
+3: Ok from 2 
+3: will try to remove 2 from dict_keys([4, 3]) 
+3: Exception: <class 'Exception'> 
+3: Exception: <class 'Exception'> 
+3: Exception: <class 'Exception'> 
+3: Removed 2 
+3: {4: <Pod(Thread-5, started 140166238205696)>, 3: <Pod(Thread-4, started 140166246598400)>} 
+3: Not finished 
+3: OK 
+3: dictionary changed size during iteration 
+3: SUCCESS 
+3: recieved new leader 4 
+3: Setting leader to 4 
+3: dictionary changed size during iteration 
+3: Running, Leader <Pod(Thread-5, started 140166238205696)> 
+3: Running, Leader <Pod(Thread-5, started 140166238205696)> 
+3: Running, Leader <Pod(Thread-5, started 140166238205696)> 
+3: Running, Leader <Pod(Thread-5, started 140166238205696)> 
+3: Running, Leader <Pod(Thread-5, started 140166238205696)> 
+3: Running, Leader <Pod(Thread-5, started 140166238205696)> 
+3: Running, Leader <Pod(Thread-5, started 140166238205696)> 
+3: Running, Leader <Pod(Thread-5, started 140166238205696)> 
+3: Running, Leader <Pod(Thread-5, started 140166238205696)> 
+3: Running, Leader <Pod(Thread-5, started 140166238205696)> 
+3: Running, Leader <Pod(Thread-5, started 140166238205696)> 
+3: Running, Leader <Pod(Thread-5, started 140166238205696)> 
