@@ -18,6 +18,7 @@ class Logger():
     def Log(self, content):
         with open(self.file_path, 'a') as file:
             string = f"{self.name}: {content} "
-            spaces = (100 - len(string))*" "
-            time_string = "" #f"{spaces}Time: {time.time()-self.startTime}"
-            file.write(f"{self.name}: {content} {time_string}\n")
+            #spaces = (100 - len(string))*" "
+            the_time = int(time.time()-self.startTime)
+            time_string = "" #f"{spaces}Time: {the_time}"
+            file.write(f"Pod{self.name} ({the_time}s): {content} {time_string}\n")

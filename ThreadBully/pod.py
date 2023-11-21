@@ -9,118 +9,101 @@ class Pod(threading.Thread):
    
     def __init__(self, pod_ID, electionStatus, leader):
         threading.Thread.__init__(self)
-        self.logger = Logger(pod_ID)
-        self.pod_ID = pod_ID
-        self.electionStatus = electionStatus
-        self.leader = leader
-        self.connected_pods = set()
-        self.ok = False
-        self.electioneers = dict()
-        self.recievedelection = False
+        self.logger = Logger(pod_ID)            # Logging function that will write to a different file
+        self.pod_ID = pod_ID                    # Unique ID for each pod (Highest will determine leader)
+        self.electionStatus = electionStatus    # Boolean to determine wether or not an election is taking place
+        self.leader = leader                    # Leader Pod
+        self.connected_pods = set()             # set of connected pods
 
+        self.ok = False                         # Boolean to determine wether or not an 'ok' message has been recieved during election 
+        self.electioneers = dict()              # Dictionary containg the pods that should take place in election
+        self.recievedelection = False           # Boolean to determine wether or not the pod recieved the election (contra to calling for an election)
+
+    # Function that keeps the pod running
     def run(self):
         while True:
             if not self.electionStatus and not self.ok:
-                self.logger.Log(f"Running, Leader {self.leader}")
+                self.logger.Log(f"Running, Leader {self.leader}")           # Log the leader
                 sleep(4)
             sleep(1)
 
-
+    # Connect a pod to another
     def connect(self, other_pod):
         self.logger.Log(f"{self.pod_ID} connected to {other_pod.pod_ID}")
-        self.connected_pods.add(other_pod)
-        other_pod.connected_pods.add(self)
+        self.connected_pods.add(other_pod)                                  # Add the pod to the set of connected pods 
+        other_pod.connected_pods.add(self)                                  # Connect oneself to the different pods set
 
+    # Disconnect one-self from every pod
     def disconnect(self):
-        for pods in self.connected_pods:
+        for pods in self.connected_pods:        # Remove one-self from other pods
             pods.connected_pods.remove(self)
+        
+        self.connected_pods = set()             # Empty connected pods
     
+    # Send a message
     def send(self, other_pod, msg):
         if other_pod in self.connected_pods:
             self.logger.Log(f"sending {msg} to {other_pod.pod_ID}")
-            other_pod.recieve(self, msg)
+            other_pod.recieve(self, msg)                # Call the reciever function in the other pod
         
-        elif other_pod == self.leader: # If the pods is trying to reach the leader but is disconnected
-            self.logger.Log("I AM DUMBD")
-            self.election()            # Start election
+        elif other_pod == self.leader:                  # If the pods is trying to reach the leader but is disconnected
+            self.logger.Log("No response from leader")
+            self.election()                             # Start election
         else:
             self.logger.Log(f"FAILED:  {self.pod_ID} tried sending to {other_pod.pod_ID}")
 
-
+    # Recieve a message
     def recieve(self, sender, msg):
-        self.logger.Log(f"Message from {sender.pod_ID}:")
+        self.logger.Log(f"Recieved message from {sender.pod_ID}:")
         self.logger.Log(msg)
 
+    # Set leader variable 
     def set_leader(self, leader):
         self.logger.Log(f"Setting leader to {leader.pod_ID}")
         self.leader = leader
 
+    # Will try to remove elements from a dictionary that can be manipulated elsewhere
     def thread_safe_del(self, pod):
         max_retries = 3
         retry_count = 0
         success = False
-        while retry_count < max_retries and not success:
-            try:
-                del self.electioneers[pod.pod_ID]
-                success = True
-            except Exception as e:
-                self.logger.Log(f"Exception: {Exception}")
-                retry_count += 1
+        
+        while retry_count < max_retries and not success:    # Tries 3 time an accepts exceptions
+                try:
+                    del self.electioneers[pod.pod_ID]       # Remove pod  
+                    success = True
+                except Exception as e:
+                    self.logger.Log(f"Exception: {Exception}")
+                    retry_count += 1
 
-
+    # Recieve an OK from other pod  
     def OK(self):
-        self.logger.Log(f"OK")
+        self.logger.Log(f"Recieved OK")
         self.ok = True
         self.electionStatus = False
-
-        max_retries = 4
-        retry_count = 0
-        success = False
-        while retry_count < max_retries and not success:
-            try:
-                for pod in self.electioneers.values():
-                    try:
-                        if self.pod_ID != pod.pod_ID:
-                            pod.recieve_OK(self)
-                    except Exception as e:
-                        self.logger.Log(f"Exception in OK for: {e}")
-                self.logger.Log("SUCCESS")
-                success = True
-            except Exception as e:
-                self.logger.Log(f"{e}")
-                retry_count += 1
-        return
-        
-
-    def recieve_OK(self, pod):
-        self.logger.Log(f"Ok from {pod.pod_ID}")
-        self.logger.Log(f"will try to remove {pod.pod_ID} from {self.electioneers.keys()}")
-        try:
-            self.thread_safe_del(pod)
-            self.logger.Log(f"Removed {pod.pod_ID}")
-        except Exception as e:
-            self.logger.Log(f"tried removing {pod.pod_ID}")
-
+   
+    # Recieve new leader 
     def coordinator(self, sender):
-        self.logger.Log(f"recieved new leader {sender.pod_ID}")
+        self.logger.Log(f"Recieved new leader {sender.pod_ID}")
         self.set_leader(sender)
         self.electionStatus = False
         self.ok = False
         self.recievedelection = False
-
+    
+    # Send coordinator to the different different pods
     def sendCoordinator(self):
         for pod in self.connected_pods:
-            self.logger.Log(f"{self.pod_ID} sending coordinator to {pod.pod_ID}")
+            self.logger.Log(f"Sending coordinator to {pod.pod_ID}")
             pod.coordinator(self)
         self.electionStatus = False
         self.recievedelection = False
-        self.leader = self
+        self.set_leader(self)       #set leader to self
         self.ok = False
 
     def recieve_election(self, sender, electioneers):
         if (sender.pod_ID == self.pod_ID):
             return
-        self.logger.Log(f"recieved election from {sender.pod_ID}")
+        self.logger.Log(f"Recieved election from {sender.pod_ID}")
         self.recievedelection = True
         electioneers[sender.pod_ID] = sender
         self.electioneers = electioneers        
@@ -148,7 +131,10 @@ class Pod(threading.Thread):
                     self.logger.Log(f"Min pod is {min_pod}")
                     pod = self.electioneers[min_pod]
                     sleep(5)
+                    self.logger.Log(f"Sending OK to {min_pod}")
                     pod.OK()
+                    self.logger.Log(f"Removing {min_pod} from election")
+                    self.thread_safe_del(self.electioneers[min_pod])
                 sleep(3)
                 
                 if len(self.electioneers) > 1:
@@ -197,7 +183,7 @@ pod2.start()
 pod3.start()
 pod4.start()
 
+#pod2.send(pod0, "Hej")
+sleep(1)
 pod1.send(pod0, "Hej")
-sleep(50)
 
-pod3.send(pod4, "Hej")
