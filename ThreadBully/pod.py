@@ -25,6 +25,7 @@ class Pod(threading.Thread):
             if not self.electionStatus and not self.ok:
                 self.logger.Log(f"Running, Leader {self.leader}")           # Log the leader
                 sleep(4)
+           
             sleep(1)
 
     # Connect a pod to another
@@ -97,7 +98,7 @@ class Pod(threading.Thread):
             pod.coordinator(self)
         self.electionStatus = False
         self.recievedelection = False
-        self.set_leader(self)       #set leader to self
+        self.set_leader(self)
         self.ok = False
 
     def recieve_election(self, sender, electioneers):
@@ -120,7 +121,7 @@ class Pod(threading.Thread):
         while len(self.electioneers) > 1 and self.electionStatus and not self.ok:
             for pod in self.electioneers.values():
                 if ((pod.pod_ID > self.pod_ID) and (not pod.electionStatus) and (not self.ok) and (not pod.ok)):
-                    self.logger.Log(f"sending election to {pod.pod_ID}")
+                    self.logger.Log(f"Sending election to {pod.pod_ID}")
                     pod.recieve_election(self, self.electioneers)   # send one self and the electioneers
             
             if not self.ok:
@@ -153,37 +154,4 @@ class Pod(threading.Thread):
                     return
             else: return
         pass
-
-# Set loggers logging function
-#Logger.LogFunc = lambda x : print(x)
-
-pod0 = Pod(0, False, None)
-pod1 = Pod(1, False, pod0)
-pod2 = Pod(2,False,pod0)
-pod3 = Pod(3,False,pod0)
-pod4 = Pod(4,False,pod0)
-
-
-pod1.connect(pod2)
-pod1.connect(pod3)
-pod1.connect(pod4)
-
-pod2.connect(pod3)
-pod2.connect(pod4)
-
-pod3.connect(pod4)
-
-
-pod1.send(pod2, "Hej")
-
-sleep(2)
-print("STARTING THREADS")
-pod1.start()
-pod2.start()
-pod3.start()
-pod4.start()
-
-#pod2.send(pod0, "Hej")
-sleep(1)
-pod1.send(pod0, "Hej")
 

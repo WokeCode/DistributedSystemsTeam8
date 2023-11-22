@@ -1,27 +1,14 @@
 Started Logging to 1
-1: 1 connected to 2 
-1: 1 connected to 3 
-1: 1 connected to 4 
-1: sending Hej to 2 
-1: Running, Leader <Pod(Thread-1, initial)> 
-1: I AM DUMBD 
-1: Election 
-1: {2: <Pod(Thread-3, started 140166254991104)>, 4: <Pod(Thread-5, started 140166238205696)>, 3: <Pod(Thread-4, started 140166246598400)>} 
-1: sending election to 2 
-1: OK 
-1: dictionary changed size during iteration 
-1: SUCCESS 
-1: recieved new leader 4 
-1: Setting leader to 4 
-1: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-1: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-1: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-1: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-1: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-1: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-1: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-1: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-1: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-1: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-1: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-1: Running, Leader <Pod(Thread-5, started 140166238205696)> 
+Pod1 (0s): 1 connected to 2 
+Pod1 (0s): 1 connected to 3 
+Pod1 (0s): 1 connected to 4 
+Pod1 (0s): sending Hej to 2 
+Pod1 (2s): Running, Leader None 
+Pod1 (3s): No response from leader 
+Pod1 (3s): Election 
+Pod1 (3s): {2: <Pod(Thread-2, started 139848953956096)>, 3: <Pod(Thread-3, started 139848945547008)>, 4: <Pod(Thread-4, started 139848937137920)>} 
+Pod1 (3s): Sending election to 2 
+Pod1 (13s): Recieved OK 
+Pod1 (50s): Recieved new leader 4 
+Pod1 (50s): Setting leader to 4 
+Pod1 (50s): Running, Leader <Pod(Thread-4, started 139848937137920)> 

@@ -1,38 +1,18 @@
 Started Logging to 2
-2: 2 connected to 3 
-2: 2 connected to 4 
-2: Message from 1: 
-2: Hej 
-2: Running, Leader <Pod(Thread-1, initial)> 
-2: recieved election from 1 
-2: Election 
-2: sending election to 4 
-2: Ok from 1 
-2: will try to remove 1 from dict_keys([2, 4, 3, 1]) 
-2: Removed 1 
-2: Ok from 1 
-2: will try to remove 1 from dict_keys([2, 4, 3]) 
-2: Exception: <class 'Exception'> 
-2: Exception: <class 'Exception'> 
-2: Exception: <class 'Exception'> 
-2: Removed 1 
-2: recieved election from 4 
-2: Election 
-2: sending election to 3 
-2: OK 
-2: dictionary changed size during iteration 
-2: SUCCESS 
-2: recieved new leader 4 
-2: Setting leader to 4 
-2: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-2: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-2: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-2: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-2: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-2: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-2: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-2: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-2: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-2: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-2: Running, Leader <Pod(Thread-5, started 140166238205696)> 
-2: Running, Leader <Pod(Thread-5, started 140166238205696)> 
+Pod2 (0s): 2 connected to 3 
+Pod2 (0s): 2 connected to 4 
+Pod2 (0s): Recieved message from 1: 
+Pod2 (0s): Hej 
+Pod2 (2s): Running, Leader <Pod(Thread-1, started 139848962365184)> 
+Pod2 (3s): Recieved election from 1 
+Pod2 (3s): Election 
+Pod2 (3s): Sending election to 3 
+Pod2 (16s): Recieved election from 4 
+Pod2 (16s): Election 
+Pod2 (24s): {2: <Pod(Thread-2, started 139848953956096)>, 3: <Pod(Thread-3, started 139848945547008)>, 4: <Pod(Thread-4, started 139848937137920)>} 
+Pod2 (24s): Not finished 
+Pod2 (34s): Recieved OK 
+Pod2 (50s): Recieved new leader 4 
+Pod2 (50s): Setting leader to 4 
+Pod2 (50s): dictionary changed size during iteration 
+Pod2 (50s): Running, Leader <Pod(Thread-4, started 139848937137920)> 
