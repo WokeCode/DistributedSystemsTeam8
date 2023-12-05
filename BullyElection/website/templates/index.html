@@ -14,13 +14,16 @@
 </head>
 <body>
     <h1>Fortune Cookie</h1>
-    <p>Click the button to get your fortune cookie.</p>
-    <button id="get-fortune-button">Get Fortune Cookie</button> 
+    <p>Click the cookie to get your fortune cookie.</p>
+    <img id="get-fortune-button" src="{{ url_for('static', filename='fortunecookie.png') }}">
     <div id="fortune-result"></div> <br>
 
     <script>
         $(document).ready(function () {
+
             $('#get-fortune-button').click(function () {
+                document.getElementById('get-fortune-button').src = "{{ url_for('static', filename='openfortunecookie.png') }}";
+
                 $.ajax({
                     url: '/get_fortune',
                     type: 'POST',
@@ -28,6 +31,9 @@
                         $('#fortune-result').text(response.fortune);
                     }
                 });
+                setTimeout(function () {
+                document.getElementById('get-fortune-button').src = "{{ url_for('static', filename='fortunecookie.png') }}";
+            }, 1000);
             });
         });
     </script>
