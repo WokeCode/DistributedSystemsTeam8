@@ -1,5 +1,7 @@
 # DistributedSystemsTeam8
-Repository for group projects, for Distributed Systems 2023, to setup reboot and startup commands enter 
+Repository for group projects, for Distributed Systems 2023.
+
+In order to use the kubernetes implementations in Project1 and Project2: Setup reboot and startup commands enter 
 'chmod +x SHUTDOWN.sh', 'chmod +x REBOOT.sh' and 'chmod +x STARTUP.sh' in terminal at repo directory. On startup enter './STARTUP.sh' in terminal window, and on reboot './REBOOT.sh'
 
 ## SETUP (linux)
