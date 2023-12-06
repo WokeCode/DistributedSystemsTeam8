@@ -8,6 +8,7 @@ import requests
 import threading
 import json
 from threading import Thread
+from Logger import Logger
 
 
 POD_IP = str(os.environ['POD_IP'])
@@ -17,7 +18,7 @@ LEADER = 0
 
 async def setup_k8s():
     # If you need to do setup of Kubernetes, i.e. if using Kubernetes Python client
-	print("K8S setup completed")
+	logger.Log("K8S setup completed")
 
 async def get_pod_id(session, pod_ip):
     endpoint = '/pod_id'
@@ -27,7 +28,7 @@ async def get_pod_id(session, pod_ip):
  
 
 async def election_check(other_pods, own_ID):
-    print("election check")
+    logger.Log("election check")
     max_other_ID = max(other_pods.values())
     max_ID = max(max_other_ID, POD_ID)
     #CHANGE IN LEADER ELECTION CHECKING
@@ -40,28 +41,28 @@ async def election_check(other_pods, own_ID):
 # POST new leader
 async def send_leader(other_pods, new_leader):
     for ip in other_pods:
-        print(f"Attempting to send {new_leader} to {ip}")
+        logger.Log(f"Attempting to send {new_leader} to {ip}")
         try:
-            print(f"sending leader {new_leader} to {ip}")
+            logger.Log(f"sending leader {new_leader} to {ip}")
             endpoint = '/receive_answer'
             url = f'http://{ip}:{WEB_PORT}{endpoint}'
             async with aiohttp.ClientSession() as session:
                 data = {'leader': new_leader}
                 async with session.post(url, json=data, timeout = 5) as response:
                     response_text = await response.text()
-                    print("RESPONSE:")
-                    print(response_text)
-            await asyncio.sleep(5)
+                    logger.Log("RESPONSE:")
+                    logger.Log(response_text)
+            #await asyncio.sleep(5)
 
         except Exception as e:
-            print("Exception in send_leader")
-            print(e)
-            await asyncio.sleep(2)
+            logger.Log("Exception in send_leader")
+            logger.Log(e)
+            #await asyncio.sleep(2)
 
 
 #POST /recieve_election
 async def recieve_election(request):
-    print("Got poked")
+    logger.Log("Got poked")
     other_pods = await get_other_pods()
     max_ID = max(other_pods.values())
     for ip, id in other_pods.items():
@@ -70,9 +71,9 @@ async def recieve_election(request):
             break
 
     if (POD_ID == max_ID and max_IP < POD_IP) or POD_ID > max_ID:
-        if(POD_ID == max_ID):print("pod_id == max_ID")
-        if(max_IP < POD_IP):print("max_IP < POD_IP")
-        if(POD_ID > max_ID):print("pod_id > max_id")
+        if(POD_ID == max_ID):logger.Log("pod_id == max_ID")
+        if(max_IP < POD_IP):logger.Log("max_IP < POD_IP")
+        if(POD_ID > max_ID):logger.Log("pod_id > max_id")
         new_leader = POD_ID
         await send_leader(other_pods, new_leader)
         global LEADER
@@ -84,17 +85,17 @@ async def recieve_election(request):
 
 async def poke(pod_ip):
     try:
-        print(f"poking leader {pod_ip}")
+        logger.Log(f"poking leader {pod_ip}")
         endpoint = '/recieve_election'
         url = f'http://{pod_ip}:{WEB_PORT}{endpoint}'
         async with aiohttp.ClientSession() as session:
             data = {'leader': 1}
             async with session.post(url, json=data, timeout = 5) as response:
                 response_text = await response.text()
-                print("RESPONSE:")
-                print(response_text)
+                logger.Log("RESPONSE:")
+                logger.Log(response_text)
                 
-        await asyncio.sleep(5)
+        #await asyncio.sleep(5)
 
         # CHECK FOR RESPONSE
         if response_text != "Recieved":
@@ -103,9 +104,9 @@ async def poke(pod_ip):
             return True
         
     except Exception as e:
-        print("Exception in send_leader")
-        print(e)
-        await asyncio.sleep(2)
+        logger.Log("Exception in send_leader")
+        logger.Log(e)
+        #await asyncio.sleep(2)
         return False  
 
 async def election(other_pods):
@@ -113,24 +114,24 @@ async def election(other_pods):
     poking = poking and LEADER != 0
     
     if LEADER == POD_ID or poking:
-        if LEADER == POD_ID:print(f"Leader {LEADER} = Pod_ID {POD_ID}")
-        else:print("LEADER RESPONDED TO ME {POD_ID}")
+        if LEADER == POD_ID:logger.Log(f"Leader {LEADER} = Pod_ID {POD_ID}")
+        else:logger.Log("LEADER RESPONDED TO ME {POD_ID}")
         return LEADER
     
     else:
         try:
-            print("election")
+            logger.Log("election")
             max_ID = max(other_pods.values())
             for ip, id in other_pods.items():
                 if id == max_ID:
                     max_IP = ip
                     break
-            print(f"max ID {max_ID} at ip {max_IP}")
+            logger.Log(f"max ID {max_ID} at ip {max_IP}")
 
             if (POD_ID == max_ID and max_IP < POD_IP) or POD_ID > max_ID:
-                if(POD_ID == max_ID):print("pod_id == max_ID")
-                if(max_IP < POD_IP):print("max_IP < POD_IP")
-                if(POD_ID > max_ID):print("pod_id > max_id")
+                if(POD_ID == max_ID):logger.Log("pod_id == max_ID")
+                if(max_IP < POD_IP):logger.Log("max_IP < POD_IP")
+                if(POD_ID > max_ID):logger.Log("pod_id > max_id")
 
                 new_leader = POD_ID
                 await send_leader(other_pods, new_leader)
@@ -139,74 +140,74 @@ async def election(other_pods):
             else:
                 new_leader = max_ID
                 poking = await poke(max_IP)
-                await asyncio.sleep(5)
+                #await asyncio.sleep(5)
                 if poking:
                     return 0
                 else:
                     try:
-                        print("COULD NOT POKE LEADER")
+                        logger.Log("COULD NOT POKE LEADER")
                         #del other_pods[max_IP]
                         #election(other_pods)
                     except Exception as e:
-                        print("Exception when trying to delete max ip")
-                        print(e)
+                        logger.Log("Exception when trying to delete max ip")
+                        logger.Log(e)
 
 
         except Exception as e:
-                print("Exception in election")
-                print(e)
-                await asyncio.sleep(2)
+                logger.Log("Exception in election")
+                logger.Log(e)
+                #await asyncio.sleep(2)
                 return 0
 
 #POST /receive_answer leader
 async def receive_answer(request):
-    print("RECIEVED LEADER")
+    logger.Log("RECIEVED LEADER")
     data = await request.text()
     try:
         data = await request.json()  # Parse JSON data from the request
         int_value = data.get('leader')
         if int_value is not None:
-            print(f"recieved data {int_value}")
+            logger.Log(f"recieved data {int_value}")
         else:
-            print("GOT")
-            print(int_value)
-            print("ERROR IN RECIEVING DATA")
+            logger.Log("GOT")
+            logger.Log(int_value)
+            logger.Log("ERROR IN RECIEVING DATA")
         received_leader = int(int_value)
-        print(f"Received leader: {received_leader}")
+        logger.Log(f"Received leader: {received_leader}")
         global LEADER
         LEADER = received_leader
     except Exception as e:
-            print("Invalid leader ID recieved")
-            print(e)
-            await asyncio.sleep(2)
+            logger.Log("Invalid leader ID recieved")
+            logger.Log(e)
+            #await asyncio.sleep(2)
     # Response data
     message = "Received"
     headers = {"Content-Type": "text/plain"}
     return web.Response(text=message, headers=headers)
 
 async def get_other_pods():
-    print("Running bully")
-    await asyncio.sleep(5) # wait for everything to be up
+    logger.Log("Running bully")
+    #await asyncio.sleep(5) # wait for everything to be up
             
     # Get all pods doing bully
     ip_list = []
-    print("Making a DNS lookup to service")
+    logger.Log("Making a DNS lookup to service")
     response = socket.getaddrinfo("bully-service",0,0,0,0)
-    print("Get response from DNS")
+    logger.Log("Get response from DNS")
     for result in response:
         ip_list.append(result[-1][0])
     ip_list = list(set(ip_list))
-    print(f"Got {len(ip_list)} pod ip's + my own")
+    logger.Log(f"Got {len(ip_list)} pod ip's + my own")
     # Remove own POD ip from the list of pods
     ip_list.remove(POD_IP)
-    print("Got %d other pod ip's" % (len(ip_list)))
+    logger.Log("Got %d other pod ip's" % (len(ip_list)))
     
     # Get ID's of other pods by sending a GET request to them
-    await asyncio.sleep(random.randint(1, 5))
+    #await asyncio.sleep(random.randint(1, 5))
     other_pods = dict()
-    print("Getting ID's of other pods")
+    logger.Log("Getting ID's of other pods")
     async with aiohttp.ClientSession() as session:
-        print("Getting pod id")
+        logger.Log("Getting pod id")
         tasks = [get_pod_id(session, pod_ip) for pod_ip in ip_list]
         results = await asyncio.gather(*tasks)
         for pod_ip, pod_id in results:
@@ -219,44 +220,44 @@ async def run_bully():
     num_request = 0
     while True:
         try:
-            await asyncio.sleep(5)
-            await asyncio.sleep(POD_ID/10)
+            #await asyncio.sleep(5)
+            #await asyncio.sleep(POD_ID/10)
             # Get other pods
             other_pods = await get_other_pods()
 
             # Other pods in network
-            print(other_pods)
+            logger.Log(other_pods)
 
             # Number of requests done
-            print(f"number of requests: {num_request}")
+            logger.Log(f"number of requests: {num_request}")
             num_request += 1
 
             election_time = await election_check(other_pods, POD_ID)
             if election_time:
-                print("running election")
+                logger.Log("running election")
                 new_leader = await election(other_pods)
 
-                print(f"leader is {new_leader}")
-                print("election done")
+                logger.Log(f"leader is {new_leader}")
+                logger.Log("election done")
             
             # Leader
             if POD_ID == LEADER:
-                print("LEADER IS SELF")
+                logger.Log("LEADER IS SELF")
 
             else:
-                print(f"LEADER IS {LEADER}")
+                logger.Log(f"LEADER IS {LEADER}")
             
             # Sleep a bit, then repeat
-            await asyncio.sleep(10)
+            await asyncio.sleep(1)
 
         except Exception as e:
-            print("Exception in run_bully")
-            print(e)
-            await asyncio.sleep(5)
+            logger.Log("Exception in run_bully")
+            logger.Log(e)
+            await asyncio.sleep(1)
     
 #GET /pod_id
 async def pod_id(request):
-    print("returning pod id")
+    #logger.Log("returning pod id")
     return web.json_response(POD_ID)
 
 
@@ -268,8 +269,9 @@ async def background_tasks(app):
     await task
 
 if __name__ == "__main__":
-    print("version 3")
-    print(f"http://{POD_IP}:{WEB_PORT}")
+    logger = Logger(POD_ID)
+    logger.Log("version 3")
+    logger.Log(f"http://{POD_IP}:{WEB_PORT}")
     app = web.Application()
     app.router.add_get('/pod_id', pod_id)
     app.router.add_post('/receive_answer', receive_answer)
