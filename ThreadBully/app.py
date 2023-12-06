@@ -27,16 +27,39 @@ def main():
     pod2.start()
     pod3.start()
     pod4.start()
-
-    #pod2.send(pod0, "Hej")
-    sleep(1)
-    print("Sending hej to 0")
-    pod1.send(pod0, "Hej")
+    try:
+        #pod2.send(pod0, "Hej")
+        sleep(1)
+        print("Sending hej to 0")
+        pod1.send(pod0, "Hej")
+    except Exception as e:
+        print(e)
 
     print("Hi")
+    sleep(50)
+    print("Disconnecting")
 
+    pod4.disconnect()
+    try:
+        pod1.send(pod4, "Hej") 
+    except Exception as e:
+        print(e)
 
+    sleep(50)
+    print("Disconnection")
+    pod3.disconnect()
+    try:
+        pod2.send(pod3, "Hej")
+    except Exception as e:
+        print(e)
 
+    print("Disconnection")
+    sleep(50)
+    pod2.disconnect()
+    try:
+        pod1.send(pod2, "Hej")
+    except Exception as e:
+        print(e)
 
 if __name__ == "__main__":
     main()

@@ -6,12 +6,13 @@ Pod1 (0s): sending Hej to 2
 Pod1 (2s): Running, Leader None 
 Pod1 (3s): No response from leader 
 Pod1 (3s): Election 
-Pod1 (3s): {3: <Pod(Thread-3, started 140689572624128)>, 2: <Pod(Thread-2, started 140689655035648)>, 4: <Pod(Thread-4, started 140689564231424)>} 
-Pod1 (3s): Sending election to 3 
+Pod1 (3s): {4: <Pod(Thread-4, started 140505668011776)>, 2: <Pod(Thread-2, started 140505684829952)>, 3: <Pod(Thread-3, started 140505676420864)>} 
+Pod1 (3s): Sending election to 4 
 Pod1 (13s): Recieved OK 
 Pod1 (42s): Recieved new leader 4 
 Pod1 (42s): Setting leader to 4 
-Pod1 (43s): Running, Leader <Pod(Thread-4, started 140689564231424)> 
-Pod1 (48s): Running, Leader <Pod(Thread-4, started 140689564231424)> 
-Pod1 (53s): Running, Leader <Pod(Thread-4, started 140689564231424)> 
-Pod1 (58s): Running, Leader <Pod(Thread-4, started 140689564231424)> 
+Pod1 (42s): Running, Leader <Pod(Thread-4, started 140505668011776)> 
+Pod1 (53s): Running, Leader <Pod(Thread-4, started 140505668011776)> 
+Pod1 (64s): Running, Leader <Pod(Thread-4, started 140505668011776)> 
+Pod1 (75s): Running, Leader <Pod(Thread-4, started 140505668011776)> 
+Pod1 (86s): Running, Leader <Pod(Thread-4, started 140505668011776)> 

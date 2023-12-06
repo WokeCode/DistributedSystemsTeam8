@@ -1,21 +1,20 @@
 Started Logging to 3
 Pod3 (0s): 3 connected to 4 
-Pod3 (2s): Running, Leader <Pod(Thread-1, started 140689663444736)> 
-Pod3 (3s): Recieved election from 1 
-Pod3 (3s): Election 
-Pod3 (3s): Sending election to 4 
-Pod3 (16s): Recieved election from 4 
+Pod3 (2s): Running, Leader <Pod(Thread-1, started 140505693239040)> 
+Pod3 (13s): Running, Leader <Pod(Thread-1, started 140505693239040)> 
+Pod3 (16s): Recieved election from 2 
 Pod3 (16s): Election 
 Pod3 (21s): Min pod is 2 
 Pod3 (26s): Sending OK to 2 
 Pod3 (26s): Removing 2 from election 
-Pod3 (29s): {3: <Pod(Thread-3, started 140689572624128)>, 4: <Pod(Thread-4, started 140689564231424)>} 
+Pod3 (29s): {4: <Pod(Thread-4, started 140505668011776)>, 3: <Pod(Thread-3, started 140505676420864)>} 
 Pod3 (29s): Not finished 
 Pod3 (39s): Recieved OK 
 Pod3 (42s): Recieved new leader 4 
 Pod3 (42s): Setting leader to 4 
 Pod3 (42s): dictionary changed size during iteration 
-Pod3 (43s): Running, Leader <Pod(Thread-4, started 140689564231424)> 
-Pod3 (48s): Running, Leader <Pod(Thread-4, started 140689564231424)> 
-Pod3 (53s): Running, Leader <Pod(Thread-4, started 140689564231424)> 
-Pod3 (58s): Running, Leader <Pod(Thread-4, started 140689564231424)> 
+Pod3 (42s): Running, Leader <Pod(Thread-4, started 140505668011776)> 
+Pod3 (53s): Running, Leader <Pod(Thread-4, started 140505668011776)> 
+Pod3 (64s): Running, Leader <Pod(Thread-4, started 140505668011776)> 
+Pod3 (75s): Running, Leader <Pod(Thread-4, started 140505668011776)> 
+Pod3 (86s): Running, Leader <Pod(Thread-4, started 140505668011776)> 

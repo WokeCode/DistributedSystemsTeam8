@@ -24,7 +24,7 @@ class Pod(threading.Thread):
         while True:
             if not self.electionStatus and not self.ok:
                 self.logger.Log(f"Running, Leader {self.leader}")           # Log the leader
-                sleep(4)
+                sleep(10)
            
             sleep(1)
 
@@ -117,13 +117,25 @@ class Pod(threading.Thread):
         if not self.recievedelection:                       #If the pod detected an election was needed
             self.electioneers = {pod.pod_ID: pod for pod in self.connected_pods if pod.pod_ID >= self.pod_ID}   # Then it should set the list of who should take part in it
             self.logger.Log(self.electioneers)
-
-        while len(self.electioneers) > 1 and self.electionStatus and not self.ok:
+        
+        # If the highest ID pod discovers an election is needed
+        if len(self.electioneers) == 0 and self.electionStatus and not self.ok:
+            self.logger.Log(f"Finished, am leader")
+            self.sendCoordinator()
+            self.electionStatus = False
+            self.recievedelection = False
+            return
+        
+        while len(self.electioneers) >= 0 and self.electionStatus and not self.ok:
             for pod in self.electioneers.values():
                 if ((pod.pod_ID > self.pod_ID) and (not pod.electionStatus) and (not self.ok) and (not pod.ok)):
-                    self.logger.Log(f"Sending election to {pod.pod_ID}")
-                    pod.recieve_election(self, self.electioneers)   # send one self and the electioneers
-            
+                    try:
+                        self.logger.Log(f"Sending election to {pod.pod_ID}")
+                        pod.recieve_election(self, self.electioneers)   # send one self and the electioneers
+                    except Exception as e:
+                        self.logger.Log(e)
+                        print(e)
+
             if not self.ok:
                 sleep(5)
                 # Find the smallest pod id in dict and check ok:

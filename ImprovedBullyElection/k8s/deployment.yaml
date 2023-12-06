@@ -29,3 +29,20 @@ spec:
             - containerPort: 8080
               name: http
               protocol: TCP
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-service
+spec:
+  selector:
+    app: bully-app
+  ports:
+    - protocol: TCP
+      port: 8080  # Port inside the cluster
+      targetPort: 8080  # Port on the pods
+      nodePort: 31000  # NodePort - accessible externally
+  type: NodePort

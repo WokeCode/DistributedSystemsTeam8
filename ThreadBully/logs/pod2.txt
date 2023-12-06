@@ -3,15 +3,16 @@ Pod2 (0s): 2 connected to 3
 Pod2 (0s): 2 connected to 4 
 Pod2 (0s): Recieved message from 1: 
 Pod2 (0s): Hej 
-Pod2 (2s): Running, Leader <Pod(Thread-1, started 140689663444736)> 
-Pod2 (7s): Running, Leader <Pod(Thread-1, started 140689663444736)> 
-Pod2 (12s): Running, Leader <Pod(Thread-1, started 140689663444736)> 
-Pod2 (17s): Running, Leader <Pod(Thread-1, started 140689663444736)> 
-Pod2 (22s): Running, Leader <Pod(Thread-1, started 140689663444736)> 
+Pod2 (2s): Running, Leader <Pod(Thread-1, started 140505693239040)> 
+Pod2 (13s): Running, Leader <Pod(Thread-1, started 140505693239040)> 
+Pod2 (16s): Recieved election from 4 
+Pod2 (16s): Election 
+Pod2 (16s): Sending election to 3 
 Pod2 (26s): Recieved OK 
 Pod2 (42s): Recieved new leader 4 
 Pod2 (42s): Setting leader to 4 
-Pod2 (43s): Running, Leader <Pod(Thread-4, started 140689564231424)> 
-Pod2 (48s): Running, Leader <Pod(Thread-4, started 140689564231424)> 
-Pod2 (53s): Running, Leader <Pod(Thread-4, started 140689564231424)> 
-Pod2 (58s): Running, Leader <Pod(Thread-4, started 140689564231424)> 
+Pod2 (42s): Running, Leader <Pod(Thread-4, started 140505668011776)> 
+Pod2 (53s): Running, Leader <Pod(Thread-4, started 140505668011776)> 
+Pod2 (64s): Running, Leader <Pod(Thread-4, started 140505668011776)> 
+Pod2 (75s): Running, Leader <Pod(Thread-4, started 140505668011776)> 
+Pod2 (86s): Running, Leader <Pod(Thread-4, started 140505668011776)> 

@@ -80,4 +80,4 @@ kubectl get pods
 minikube addons enable metrics-server
 
 
-minikube dashboard
+#minikube dashboard

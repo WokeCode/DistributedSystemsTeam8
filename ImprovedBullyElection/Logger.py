@@ -16,8 +16,7 @@ class Logger():
             new_file.write(f"Started Logging to {self.name}\n")
 
     def Log(self, content):
-        the_time = int(time.time()-self.startTime)
-        print(f"{the_time}s:   {content}")
+        print(content)
         with open(self.file_path, 'a') as file:
             string = f"{self.name}: {content} "
             #spaces = (100 - len(string))*" "
